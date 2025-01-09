@@ -37,8 +37,8 @@
 					<label class="font-weight-bold">Jenis Kriteria</label>
 					<select name="jenis" class="form-control" required>
 						<option value="">--Pilih Jenis Kriteria--</option>
-						<option value="Benefit">Benefit</option>
-						<option value="Cost">Cost</option>						
+						<option value="Kinerja">Kinerja</option>
+						<option value="Risiko">Risiko</option>						
 					</select>
 				</div>
 			</div>

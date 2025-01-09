@@ -12,7 +12,8 @@
     }
 </style>
 <body>
-<h4>Hasil Akhir Perankingan</h4>
+<h4>Hasil Akhir Perankingan - Sistem Pendukung Keputusan terhadap Penentuan Tenaga Non Dosen Terdisiplin di
+Politeknik Kesehatan Permata Indonesia Yogyakarta</h4>
 <table border="1" width="100%">
 	<thead>
 		<tr align="center">

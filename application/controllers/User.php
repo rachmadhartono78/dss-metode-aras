@@ -47,7 +47,7 @@
 				'nama' => $this->input->post('nama'),
 				'email' => $this->input->post('email'),
 				'username' => $this->input->post('username'),
-				'password' => md5($this->input->post('password'))
+				'password' => $this->input->post('password')
 			];
 			
 			$this->form_validation->set_rules('email', 'email', 'required');
@@ -104,7 +104,7 @@
 				'nama' => $this->input->post('nama'),
                 'email' => $this->input->post('email'),
                 'username' => $this->input->post('username'),
-                'password' => md5($this->input->post('password'))
+                'password' => $this->input->post('password')
             );
 
             $this->User_model->update($id_user, $data);

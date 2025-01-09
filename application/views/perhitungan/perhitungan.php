@@ -1,130 +1,145 @@
 <?php
 $this->load->view('layouts/header_admin');
-//Matrix Keputusan (X)
+
+// Matrix Keputusan (X)
 $matriks_x = array();
-foreach($alternatifs as $alternatif):
-	foreach($kriterias as $kriteria):
-		
-		$id_alternatif = $alternatif->id_alternatif;
-		$id_kriteria = $kriteria->id_kriteria;
-		
-		$data_pencocokan = $this->Perhitungan_model->data_nilai($id_alternatif,$id_kriteria);
-		$nilai = $data_pencocokan['nilai'];
-		
-		$matriks_x[$id_kriteria][$id_alternatif] = $nilai;
-	endforeach;
+foreach ($alternatifs as $alternatif):
+    foreach ($kriterias as $kriteria):
+
+        $id_alternatif = $alternatif->id_alternatif;
+        $id_kriteria = $kriteria->id_kriteria;
+
+        // Initialize the array for $id_kriteria if it's not set
+        if (!isset($matriks_x[$id_kriteria])) {
+            $matriks_x[$id_kriteria] = [];
+        }
+
+        $data_pencocokan = $this->Perhitungan_model->data_nilai($id_alternatif, $id_kriteria);
+        $nilai = isset($data_pencocokan['nilai']) ? $data_pencocokan['nilai'] : 0; // Default to 0 if 'nilai' is not set
+
+        $matriks_x[$id_kriteria][$id_alternatif] = $nilai;
+    endforeach;
 endforeach;
 
-//Matrix Keputusan (X0)
+// Matrix Keputusan (X0)
 $matriks_x0 = array();
-foreach($kriterias as $kriteria):
-	$type_kriteria = $kriteria->jenis;
-	if($type_kriteria == 'Benefit'):
-		$id_kriteria = $kriteria->id_kriteria;
-		$x0 = max($matriks_x[$id_kriteria]);
-	elseif($type_kriteria == 'Cost'):
-		$id_kriteria = $kriteria->id_kriteria;
-		$x0 = min($matriks_x[$id_kriteria]);
-	endif;
-	
-	$matriks_x0[$id_kriteria] = $x0;
+foreach ($kriterias as $kriteria):
+    $type_kriteria = $kriteria->jenis;
+    if ($type_kriteria == 'Kinerja'):
+        $id_kriteria = $kriteria->id_kriteria;
+        $x0 = max($matriks_x[$id_kriteria]);
+    elseif ($type_kriteria == 'Risiko'):
+        $id_kriteria = $kriteria->id_kriteria;
+        $x0 = min($matriks_x[$id_kriteria]);
+    endif;
+
+    $matriks_x0[$id_kriteria] = $x0;
 endforeach;
 
+// Matrix Keputusan (X2)
 $matriks_x2 = array();
-foreach($alternatifs as $alternatif):
-	foreach($kriterias as $kriteria):
-		
-		$id_alternatif = $alternatif->id_alternatif;
-		$id_kriteria = $kriteria->id_kriteria;
-		
-		$x = $matriks_x[$id_kriteria][$id_alternatif];
-		$type_kriteria = $kriteria->jenis;
-		if($type_kriteria == 'Benefit'):
-			$x2 = $x;
-		elseif($type_kriteria == 'Cost'):
-			$x2 = 1/$x;
-		endif;
-		
-		$matriks_x2[$id_kriteria][$id_alternatif] = $x2;
-	endforeach;
+foreach ($alternatifs as $alternatif):
+    foreach ($kriterias as $kriteria):
+
+        $id_alternatif = $alternatif->id_alternatif;
+        $id_kriteria = $kriteria->id_kriteria;
+
+        $x = $matriks_x[$id_kriteria][$id_alternatif];
+        $type_kriteria = $kriteria->jenis;
+        
+        // Check for division by zero before performing the division
+        if ($type_kriteria == 'Kinerja'):
+            $x2 = $x;
+        elseif ($type_kriteria == 'Risiko'):
+            $x2 = ($x != 0) ? 1 / $x : 0;  // Avoid division by zero
+        endif;
+
+        $matriks_x2[$id_kriteria][$id_alternatif] = $x2;
+    endforeach;
 endforeach;
 
+// Matrix Keputusan (X02)
 $matriks_x02 = array();
-foreach($kriterias as $kriteria):
-	$id_kriteria = $kriteria->id_kriteria;
-	$type_kriteria = $kriteria->jenis;
-	$x0 = $matriks_x0[$id_kriteria];
-	if($type_kriteria == 'Benefit'):
-		$x02 = $x0;
-	elseif($type_kriteria == 'Cost'):
-		$x02 = 1/$x0;
-	endif;
-	
-	$matriks_x02[$id_kriteria] = $x02;
+foreach ($kriterias as $kriteria):
+    $id_kriteria = $kriteria->id_kriteria;
+    $type_kriteria = $kriteria->jenis;
+    $x0 = $matriks_x0[$id_kriteria];
+    
+    // Check for division by zero before performing the division
+    if ($type_kriteria == 'Kinerja'):
+        $x02 = $x0;
+    elseif ($type_kriteria == 'Risiko'):
+        $x02 = ($x0 != 0) ? 1 / $x0 : 0;  // Avoid division by zero
+    endif;
+
+    $matriks_x02[$id_kriteria] = $x02;
 endforeach;
 
 $total_matriks_x = array();
-foreach($kriterias as $kriteria):
-	$tx = 0;
-	$id_kriteria = $kriteria->id_kriteria;
-	foreach($alternatifs as $alternatif):
-		$id_alternatif = $alternatif->id_alternatif;
-		$x = $matriks_x2[$id_kriteria][$id_alternatif];
-		$tx += $x;
-	endforeach;
-	$x0 = $matriks_x02[$id_kriteria];
-	$total_matriks_x[$id_kriteria] = $tx + $x0;
+foreach ($kriterias as $kriteria):
+    $tx = 0;
+    $id_kriteria = $kriteria->id_kriteria;
+    foreach ($alternatifs as $alternatif):
+        $id_alternatif = $alternatif->id_alternatif;
+        $x = $matriks_x2[$id_kriteria][$id_alternatif];
+        $tx += $x;
+    endforeach;
+    $x0 = $matriks_x02[$id_kriteria];
+    $total_matriks_x[$id_kriteria] = $tx + $x0;
 endforeach;
 
-//Normalisasi Matriks Keputusan
+// Normalisasi Matriks Keputusan
 $matriks_r = array();
-foreach($alternatifs as $alternatif):
-	foreach($kriterias as $kriteria):
-		
-		$id_alternatif = $alternatif->id_alternatif;
-		$id_kriteria = $kriteria->id_kriteria;
-		
-		$x = $matriks_x2[$id_kriteria][$id_alternatif];
-		$total = $total_matriks_x[$id_kriteria];
-		$matriks_r[$id_kriteria][$id_alternatif] = $x/$total;
-	endforeach;
-endforeach;
-$matriks_r0 = array();
-foreach($kriterias as $kriteria):
-	$id_kriteria = $kriteria->id_kriteria;
-	$x0 = $matriks_x02[$id_kriteria];
-	$total = $total_matriks_x[$id_kriteria];
-	$matriks_r0[$id_kriteria] = $x0/$total;
+foreach ($alternatifs as $alternatif):
+    foreach ($kriterias as $kriteria):
+
+        $id_alternatif = $alternatif->id_alternatif;
+        $id_kriteria = $kriteria->id_kriteria;
+
+        $x = $matriks_x2[$id_kriteria][$id_alternatif];
+        $total = $total_matriks_x[$id_kriteria];
+        $matriks_r[$id_kriteria][$id_alternatif] = $x / $total;
+    endforeach;
 endforeach;
 
-//Matriks Normalisasi Terbobot
+$matriks_r0 = array();
+foreach ($kriterias as $kriteria):
+    $id_kriteria = $kriteria->id_kriteria;
+    $x0 = $matriks_x02[$id_kriteria];
+    $total = $total_matriks_x[$id_kriteria];
+    $matriks_r0[$id_kriteria] = $x0 / $total;
+endforeach;
+
+// Matriks Normalisasi Terbobot
 $matriks_rb = array();
 $total_rb = array();
-foreach($alternatifs as $alternatif):
-	$t_rb = 0;
-	$id_alternatif = $alternatif->id_alternatif;
-	foreach($kriterias as $kriteria):
-		$id_kriteria = $kriteria->id_kriteria;
-		$bobot = $kriteria->bobot;
-		$r = $matriks_r[$id_kriteria][$id_alternatif];
-		$rb = $r*$bobot;
-		$matriks_rb[$id_kriteria][$id_alternatif] = $rb;
-		$t_rb += $rb;
-	endforeach;
-	$total_rb[$id_alternatif] = $t_rb;
+foreach ($alternatifs as $alternatif):
+    $t_rb = 0;
+    $id_alternatif = $alternatif->id_alternatif;
+    foreach ($kriterias as $kriteria):
+        $id_kriteria = $kriteria->id_kriteria;
+        $bobot = $kriteria->bobot;
+        $r = $matriks_r[$id_kriteria][$id_alternatif];
+        $rb = $r * $bobot;
+        $matriks_rb[$id_kriteria][$id_alternatif] = $rb;
+        $t_rb += $rb;
+    endforeach;
+    $total_rb[$id_alternatif] = $t_rb;
 endforeach;
 
 $matriks_rb0 = array();
 $total_rb0 = 0;
-foreach($kriterias as $kriteria):
-	$id_kriteria = $kriteria->id_kriteria;
-	$r0 = $matriks_r0[$id_kriteria];
-	$bobot = $kriteria->bobot;
-	$rb = $r0*$bobot;
-	$matriks_rb0[$id_kriteria] = $rb;
-	$total_rb0 += $rb;
+foreach ($kriterias as $kriteria):
+    $id_kriteria = $kriteria->id_kriteria;
+    $r0 = $matriks_r0[$id_kriteria];
+    $bobot = $kriteria->bobot;
+    $rb = $r0 * $bobot;
+    $matriks_rb0[$id_kriteria] = $rb;
+    $total_rb0 += $rb;
 endforeach;
 ?>
+
+
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-fw fa-calculator"></i> Data Perhitungan</h1>

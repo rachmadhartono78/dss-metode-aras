@@ -9,7 +9,8 @@
 <div class="card shadow mb-4">
     <!-- /.card-header -->
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-info"><i class="fa fa-table"></i> Hasil Akhir Perankingan</h6>
+        <h6 class="m-0 font-weight-bold text-info"><i class="fa fa-table"></i> Hasil Akhir Perankingan - Sistem Pendukung Keputusan terhadap Penentuan Tenaga Non Dosen Terdisiplin di
+		Politeknik Kesehatan Permata Indonesia Yogyakarta</h6>
     </div>
 
     <div class="card-body">

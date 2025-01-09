@@ -30,7 +30,7 @@
 				'nama' => $this->input->post('nama'),
                 'email' => $this->input->post('email'),
                 'username' => $this->input->post('username'),
-                'password' => md5($this->input->post('password'))
+                'password' => $this->input->post('password'),
             );
 
             $this->Profile_model->update($id_user, $data);

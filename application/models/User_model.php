@@ -52,8 +52,30 @@
         {
             $query = $this->db->get('user_level');
             return $query->result();
-        }             
-    }
+        }         
+        
+
+        public function register_user($username, $password)
+        {
+            // Pastikan username belum ada dalam database
+            $this->db->where('username', $username);
+            $query = $this->db->get('users');  // Sesuaikan dengan nama tabel Anda
+
+            if ($query->num_rows() > 0) {
+                return false;  // Username sudah terdaftar
+            }
+
+            // Jika username belum ada, masukkan data pengguna baru
+            $data = [
+                'username' => $username,
+                'password' => $password,  // Pastikan password sudah di-hash
+                'id_user_level' => 2,     // Misalnya level pengguna biasa, sesuaikan dengan level Anda
+            ];
+
+            return $this->db->insert('users', $data);  // Sesuaikan dengan nama tabel Anda
+            }
+        }
+
     
     /* End of file Kategori_model.php */
     

@@ -35,8 +35,8 @@
 				<div class="form-group col-md-6">
 					<label class="font-weight-bold">Jenis Kriteria</label>
 					<select name="jenis" class="form-control" required>
-						<option value="Benefit" <?php if($kriteria->jenis == "Benefit"){ echo 'selected'; } ?>>Benefit</option>
-						<option value="Cost" <?php if($kriteria->jenis == "Cost"){ echo 'selected'; } ?>>Cost</option>						
+						<option value="Kinerja" <?php if($kriteria->jenis == "Kinerja"){ echo 'selected'; } ?>>Kinerja</option>
+						<option value="Risiko" <?php if($kriteria->jenis == "Risiko"){ echo 'selected'; } ?>>Risiko</option>						
 					</select>
 				</div>
 			</div>
