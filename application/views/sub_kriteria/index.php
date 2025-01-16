@@ -1,7 +1,7 @@
 <?php $this->load->view('layouts/header_admin'); ?>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-fw fa-cubes"></i> Data Sub Kriteria</h1>
+    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-fw fa-cubes"></i> Parameter </h1>
 </div>
 
 <?= $this->session->flashdata('message'); ?>
@@ -10,7 +10,7 @@
 <div class="card shadow mb-4">
     <!-- /.card-header -->
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-info"><i class="fa fa-table"></i> Daftar Data Sub Kriteria</h6>
+        <h6 class="m-0 font-weight-bold text-info"><i class="fa fa-table"></i> Daftar Data Parameter</h6>
     </div>
 
     <div class="card-body">

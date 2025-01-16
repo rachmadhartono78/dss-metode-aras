@@ -74,7 +74,7 @@ if($this->session->status !== ('Logged'))
 	  <li class="nav-item <?php if($page=='Sub Kriteria'){echo 'active';}?>">
         <a class="nav-link" href="<?= base_url('Sub_kriteria'); ?>">
           <i class="fas fa-fw fa-cubes"></i>
-          <span>Data Sub Kriteria</span></a>
+          <span>Parameter</span></a>
       </li>
 	  
 	  <li class="nav-item <?php if($page=='Alternatif'){echo 'active';}?>">
